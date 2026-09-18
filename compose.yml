@@ -1,0 +1,7 @@
+services:
+  NOMBRE_PROYECTO-front:
+    image: reservas-app-front:latest
+    build: .
+    container_name: reservas-app-front
+    ports:
+      - "4200:80"
