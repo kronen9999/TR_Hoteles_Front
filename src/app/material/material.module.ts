@@ -16,6 +16,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatMenuModule } from '@angular/material/menu';
 
 const MATERIAL_MODULES = [
   MatTableModule,
@@ -33,7 +34,8 @@ const MATERIAL_MODULES = [
   MatListModule,
   MatCardModule,
   MatChipsModule,
-  MatDividerModule
+  MatDividerModule,
+  MatMenuModule
 ];
 
 @NgModule({

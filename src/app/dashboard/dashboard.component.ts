@@ -3,6 +3,7 @@ import { UsuarioService } from '../usuarios/usuario.service';
 import { AuthService } from '../core/services/auth.service';
 import { ROLES } from '../core/models/usuario.model';
 import { HuespedService } from '../huespedes/huesped.service';
+import { HabitacionService } from '../habitaciones/habitacion.service';
 import { HttpErrorHelper } from '../core/utils/http-error.helper';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -16,13 +17,16 @@ export class DashboardComponent implements OnInit {
 
   totalUsuarios = 0;
   totalHuespedesActivos = 0;
+  totalHabitacionesDisponibles = 0;
   cargandoUsuarios = true;
   cargandoHuespedes = true;
+  cargandoHabitaciones = true;
   isAdmin = false;
 
   constructor(
     private usuarioService: UsuarioService,
     private huespedService: HuespedService,
+    private habitacionService: HabitacionService,
     private authService: AuthService,
     private snackBar: MatSnackBar
   ) {}
@@ -33,6 +37,7 @@ export class DashboardComponent implements OnInit {
       this.listarUsuarios();
     }
     this.listarHuespedes();
+    this.listarHabitaciones();
   }
 
   listarUsuarios(): void {
@@ -56,6 +61,19 @@ export class DashboardComponent implements OnInit {
       },
       error: (err) => {
         this.cargandoHuespedes = false;
+        this.snackBar.open(HttpErrorHelper.obtenerMensaje(err), 'Cerrar', { duration: 3000 });
+      }
+    });
+  }
+
+  listarHabitaciones(): void {
+    this.habitacionService.listar().subscribe({
+      next: (data) => {
+        this.totalHabitacionesDisponibles = data.filter(h => h.estadoHabitacion === 'DISPONIBLE').length;
+        this.cargandoHabitaciones = false;
+      },
+      error: (err) => {
+        this.cargandoHabitaciones = false;
         this.snackBar.open(HttpErrorHelper.obtenerMensaje(err), 'Cerrar', { duration: 3000 });
       }
     });

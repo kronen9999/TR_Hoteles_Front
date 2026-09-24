@@ -17,17 +17,17 @@
     </mat-card-actions>
   </mat-card>
 
-  <!-- Habitaciones -->
-  <mat-card class="card-metrica deshabilitada">
+  <!-- Habitaciones (Activo) -->
+  <mat-card class="card-metrica">
     <mat-card-content>
-      <mat-icon class="icono">bed</mat-icon>
+      <mat-icon class="icono" color="primary">bed</mat-icon>
       <div>
-        <p class="numero">—</p>
+        <p class="numero">{{ cargandoHabitaciones ? '—' : totalHabitacionesDisponibles }}</p>
         <p class="etiqueta">Habitaciones disponibles</p>
       </div>
     </mat-card-content>
     <mat-card-actions>
-      <span class="pronto">Próximamente</span>
+      <a mat-button color="primary" routerLink="/habitaciones">Ver habitaciones</a>
     </mat-card-actions>
   </mat-card>
 

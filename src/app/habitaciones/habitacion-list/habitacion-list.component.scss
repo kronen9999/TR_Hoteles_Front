@@ -1,0 +1,24 @@
+.spacer {
+  flex: 1 1 auto;
+}
+
+table {
+  width: 100%;
+}
+
+.loading,
+.sin-datos {
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+}
+
+.toolbar-busqueda {
+  padding: 0 16px;
+
+  .campo-filtro {
+    width: 100%;
+    max-width: 260px;
+    margin: 8px 0;
+  }
+}
