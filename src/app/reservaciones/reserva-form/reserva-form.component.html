@@ -1,0 +1,80 @@
+<h2 mat-dialog-title>{{ esEdicion ? 'Reserva #' + data?.idReserva : 'Nueva' }} reserva</h2>
+
+<form [formGroup]="form" (ngSubmit)="guardar()">
+  <mat-dialog-content>
+    <div class="loading" *ngIf="cargandoDatos">
+      <mat-spinner diameter="36"></mat-spinner>
+    </div>
+
+    <ng-container *ngIf="!cargandoDatos">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Huésped</mat-label>
+        <mat-select formControlName="idHuesped">
+          <mat-option *ngFor="let h of huespedes" [value]="h.idHuesped">
+            {{ h.nombre }}
+          </mat-option>
+        </mat-select>
+        <mat-error>Debe seleccionar un huésped</mat-error>
+      </mat-form-field>
+
+      <ng-container *ngIf="!esEdicion">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Habitación (solo disponibles)</mat-label>
+          <mat-select formControlName="idHabitacion">
+            <mat-option *ngFor="let hab of habitacionesDisponibles" [value]="hab.idHabitacion">
+              Habitación {{ hab.numeroHabitacion }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.get('idHabitacion')?.hasError('required')">
+            Debe seleccionar una habitación
+          </mat-error>
+        </mat-form-field>
+        <p class="nota" *ngIf="habitacionesDisponibles.length === 0">
+          No hay habitaciones DISPONIBLES en este momento.
+        </p>
+      </ng-container>
+
+      <mat-form-field appearance="outline" class="full-width" *ngIf="esEdicion">
+        <mat-label>Habitación asignada (no cambiable)</mat-label>
+        <input matInput [value]="numeroHabitacionActual ?? ('#' + data?.idHabitacion)" readonly>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Fecha de entrada</mat-label>
+        <input matInput type="date" formControlName="fechaEntrada" [readonly]="esEnCurso">
+        <mat-error *ngIf="form.get('fechaEntrada')?.hasError('required')">
+          La fecha de entrada es requerida
+        </mat-error>
+      </mat-form-field>
+      <p class="nota" *ngIf="esEnCurso">
+        Con check-in realizado, la fecha de entrada no puede modificarse.
+      </p>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Fecha de salida</mat-label>
+        <input matInput type="date" formControlName="fechaSalida">
+        <mat-error *ngIf="form.get('fechaSalida')?.hasError('required')">
+          La fecha de salida es requerida
+        </mat-error>
+      </mat-form-field>
+
+      <p class="nota error" *ngIf="form.hasError('fechasInconsistentes')">
+        La fecha de entrada debe ser anterior a la fecha de salida.
+      </p>
+
+      <p class="nota" *ngIf="esEnCurso">
+        Con check-in realizado solo se permite modificar la fecha de salida.
+      </p>
+      <p class="nota" *ngIf="!esEdicion">
+        Al crear, la reserva queda CONFIRMADA y la habitación pasa automáticamente a OCUPADA.
+      </p>
+    </ng-container>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="cancelar()">Cancelar</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="guardando || cargandoDatos">
+      {{ guardando ? 'Guardando...' : 'Guardar' }}
+    </button>
+  </mat-dialog-actions>
+</form>

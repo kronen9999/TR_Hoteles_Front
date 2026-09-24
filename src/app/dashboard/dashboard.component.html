@@ -3,17 +3,17 @@
 
 <div class="grid-cards">
 
-  <!-- Reservaciones -->
-  <mat-card class="card-metrica deshabilitada">
+  <!-- Reservaciones (Activo) -->
+  <mat-card class="card-metrica">
     <mat-card-content>
-      <mat-icon class="icono">calendar_month</mat-icon>
+      <mat-icon class="icono" color="primary">calendar_month</mat-icon>
       <div>
-        <p class="numero">—</p>
+        <p class="numero">{{ cargandoReservas ? '—' : totalReservasActivas }}</p>
         <p class="etiqueta">Reservaciones activas</p>
       </div>
     </mat-card-content>
     <mat-card-actions>
-      <span class="pronto">Próximamente</span>
+      <a mat-button color="primary" routerLink="/reservaciones">Ver reservas</a>
     </mat-card-actions>
   </mat-card>
 

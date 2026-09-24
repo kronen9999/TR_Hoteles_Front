@@ -1,0 +1,98 @@
+<mat-toolbar color="primary">
+  <span>Reservaciones</span>
+  <span class="spacer"></span>
+  <button mat-raised-button color="accent" (click)="abrirFormulario()">
+    <mat-icon>post_add</mat-icon> Nueva reserva
+  </button>
+</mat-toolbar>
+
+<div class="toolbar-busqueda">
+  <mat-form-field appearance="outline" class="campo-filtro">
+    <mat-label>Filtrar por estado</mat-label>
+    <mat-select [(ngModel)]="filtroEstado">
+      <mat-option value="">Todas</mat-option>
+      <mat-option value="CONFIRMADA">Confirmadas</mat-option>
+      <mat-option value="EN_CURSO">En curso</mat-option>
+      <mat-option value="FINALIZADA">Finalizadas</mat-option>
+      <mat-option value="CANCELADA">Canceladas</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<div class="loading" *ngIf="cargando">
+  <mat-spinner diameter="40"></mat-spinner>
+</div>
+
+<table mat-table [dataSource]="reservasFiltradas" *ngIf="!cargando" class="mat-elevation-z2">
+  <ng-container matColumnDef="idReserva">
+    <th mat-header-cell *matHeaderCellDef>#</th>
+    <td mat-cell *matCellDef="let r">{{ r.idReserva }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="huesped">
+    <th mat-header-cell *matHeaderCellDef>Huésped</th>
+    <td mat-cell *matCellDef="let r">{{ nombreHuesped(r.idHuesped) }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="habitacion">
+    <th mat-header-cell *matHeaderCellDef>Habitación</th>
+    <td mat-cell *matCellDef="let r">{{ textoHabitacion(r.idHabitacion) }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="fechas">
+    <th mat-header-cell *matHeaderCellDef>Entrada → Salida</th>
+    <td mat-cell *matCellDef="let r">
+      {{ r.fechaEntrada }} → {{ r.fechaSalida }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="estado">
+    <th mat-header-cell *matHeaderCellDef>Estado</th>
+    <td mat-cell *matCellDef="let r">
+      <mat-chip-set>
+        <mat-chip
+          highlighted
+          [color]="r.estadoReserva === 'CONFIRMADA' ? 'primary' : r.estadoReserva === 'EN_CURSO' ? 'accent' : r.estadoReserva === 'CANCELADA' ? 'warn' : 'basic'">
+          {{ r.estadoReserva }}
+        </mat-chip>
+      </mat-chip-set>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="acciones">
+    <th mat-header-cell *matHeaderCellDef>Acciones</th>
+    <td mat-cell *matCellDef="let r">
+      <button mat-icon-button color="primary" matTooltip="Check-in"
+              *ngIf="puedeCheckIn(r)" (click)="hacerCheckIn(r)">
+        <mat-icon>login</mat-icon>
+      </button>
+
+      <button mat-icon-button color="accent" matTooltip="Check-out"
+              *ngIf="puedeCheckOut(r)" (click)="hacerCheckOut(r)">
+        <mat-icon>logout</mat-icon>
+      </button>
+
+      <button mat-icon-button color="primary" matTooltip="Modificar fechas"
+              *ngIf="puedeEditar(r)" (click)="abrirFormulario(r)">
+        <mat-icon>edit</mat-icon>
+      </button>
+
+      <button mat-icon-button matTooltip="Cancelar reserva"
+              *ngIf="puedeCancelar(r)" (click)="cancelar(r)">
+        <mat-icon>event_busy</mat-icon>
+      </button>
+
+      <button mat-icon-button color="warn" matTooltip="Eliminar"
+              *ngIf="puedeEliminar(r)" (click)="eliminar(r)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+  <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+</table>
+
+<p *ngIf="!cargando && reservasFiltradas.length === 0" class="sin-datos">
+  No se encontraron reservas registradas.
+</p>
