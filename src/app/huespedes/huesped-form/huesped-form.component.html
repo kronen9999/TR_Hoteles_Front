@@ -1,0 +1,115 @@
+<h2 mat-dialog-title>{{ esEdicion ? 'Editar' : 'Nuevo' }} huésped</h2>
+
+<form [formGroup]="form" (ngSubmit)="guardar()">
+  <mat-dialog-content>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="nombre" maxlength="50">
+      <mat-error *ngIf="form.get('nombre')?.hasError('required')">
+        El nombre es requerido
+      </mat-error>
+      <mat-error *ngIf="form.get('nombre')?.hasError('minlength') || form.get('nombre')?.hasError('maxlength')">
+        El nombre debe tener entre 2 y 50 caracteres
+      </mat-error>
+      <mat-error *ngIf="form.get('nombre')?.hasError('pattern')">
+        El nombre solo admite letras y espacios
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Apellido paterno</mat-label>
+      <input matInput formControlName="apellidoPaterno" maxlength="50">
+      <mat-error *ngIf="form.get('apellidoPaterno')?.hasError('required')">
+        El apellido paterno es requerido
+      </mat-error>
+      <mat-error *ngIf="form.get('apellidoPaterno')?.hasError('minlength') || form.get('apellidoPaterno')?.hasError('maxlength')">
+        El apellido paterno debe tener entre 2 y 50 caracteres
+      </mat-error>
+      <mat-error *ngIf="form.get('apellidoPaterno')?.hasError('pattern')">
+        El apellido paterno solo admite letras y espacios
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Apellido materno</mat-label>
+      <input matInput formControlName="apellidoMaterno" maxlength="50">
+      <mat-error *ngIf="form.get('apellidoMaterno')?.hasError('required')">
+        El apellido materno es requerido
+      </mat-error>
+      <mat-error *ngIf="form.get('apellidoMaterno')?.hasError('minlength') || form.get('apellidoMaterno')?.hasError('maxlength')">
+        El apellido materno debe tener entre 2 y 50 caracteres
+      </mat-error>
+      <mat-error *ngIf="form.get('apellidoMaterno')?.hasError('pattern')">
+        El apellido materno solo admite letras y espacios
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" maxlength="100">
+      <mat-icon matSuffix>alternate_email</mat-icon>
+      <mat-error *ngIf="form.get('email')?.hasError('required')">
+        El email es requerido
+      </mat-error>
+      <mat-error *ngIf="form.get('email')?.hasError('email')">
+        El email debe tener un formato válido
+      </mat-error>
+      <mat-error *ngIf="form.get('email')?.hasError('maxlength')">
+        El email debe tener máximo 100 caracteres
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Teléfono</mat-label>
+      <input matInput formControlName="telefono" maxlength="10" inputmode="numeric">
+      <mat-icon matSuffix>phone</mat-icon>
+      <mat-error *ngIf="form.get('telefono')?.hasError('required')">
+        El teléfono es requerido
+      </mat-error>
+      <mat-error *ngIf="form.get('telefono')?.hasError('pattern')">
+        El teléfono debe tener exactamente 10 dígitos
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Documento de identificación</mat-label>
+      <mat-select formControlName="documento">
+        <mat-option *ngFor="let doc of documentoCatalogo" [value]="doc.id">
+          {{ doc.label }}
+        </mat-option>
+      </mat-select>
+      <mat-error>Debe seleccionar un documento</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Últimos 5 dígitos del documento</mat-label>
+      <input matInput formControlName="numDocumento" maxlength="5" inputmode="numeric">
+      <mat-icon matSuffix>badge</mat-icon>
+      <mat-error *ngIf="form.get('numDocumento')?.hasError('required')">
+        Los dígitos del documento son requeridos
+      </mat-error>
+      <mat-error *ngIf="form.get('numDocumento')?.hasError('pattern')">
+        Deben ser exactamente 5 números
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nacionalidad</mat-label>
+      <input matInput formControlName="nacionalidad" maxlength="30">
+      <mat-icon matSuffix>public</mat-icon>
+      <mat-error *ngIf="form.get('nacionalidad')?.hasError('required')">
+        La nacionalidad es requerida
+      </mat-error>
+      <mat-error *ngIf="form.get('nacionalidad')?.hasError('maxlength')">
+        La nacionalidad debe tener máximo 30 caracteres
+      </mat-error>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="cancelar()">Cancelar</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="guardando">
+      {{ guardando ? 'Guardando...' : 'Guardar' }}
+    </button>
+  </mat-dialog-actions>
+</form>

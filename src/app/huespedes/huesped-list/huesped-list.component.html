@@ -1,0 +1,71 @@
+<mat-toolbar color="primary">
+  <span>Huéspedes</span>
+  <span class="spacer"></span>
+  <button mat-raised-button color="accent" (click)="abrirFormulario()">
+    <mat-icon>group_add</mat-icon> Nuevo huésped
+  </button>
+</mat-toolbar>
+
+<div class="toolbar-busqueda">
+  <mat-form-field appearance="outline" class="campo-busqueda">
+    <mat-label>Buscar huésped</mat-label>
+    <input matInput [(ngModel)]="filtro" placeholder="Nombre, email, teléfono o nacionalidad">
+    <mat-icon matPrefix>search</mat-icon>
+  </mat-form-field>
+</div>
+
+<div class="loading" *ngIf="cargando">
+  <mat-spinner diameter="40"></mat-spinner>
+</div>
+
+<table mat-table [dataSource]="huespedesFiltrados" *ngIf="!cargando" class="mat-elevation-z2">
+  <ng-container matColumnDef="nombre">
+    <th mat-header-cell *matHeaderCellDef>Nombre completo</th>
+    <td mat-cell *matCellDef="let h">{{ h.nombre }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="email">
+    <th mat-header-cell *matHeaderCellDef>Email</th>
+    <td mat-cell *matCellDef="let h">{{ h.email }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="telefono">
+    <th mat-header-cell *matHeaderCellDef>Teléfono</th>
+    <td mat-cell *matCellDef="let h">{{ h.telefono }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="documento">
+    <th mat-header-cell *matHeaderCellDef>Documento</th>
+    <td mat-cell *matCellDef="let h">
+      <mat-chip-set>
+        <mat-chip highlighted color="primary">
+          {{ getDocumentoLabel(h.documento) }} · {{ h.numDocumento }}
+        </mat-chip>
+      </mat-chip-set>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="nacionalidad">
+    <th mat-header-cell *matHeaderCellDef>Nacionalidad</th>
+    <td mat-cell *matCellDef="let h">{{ h.nacionalidad }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="acciones">
+    <th mat-header-cell *matHeaderCellDef>Acciones</th>
+    <td mat-cell *matCellDef="let h">
+      <button mat-icon-button color="primary" matTooltip="Editar" (click)="abrirFormulario(h)">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="warn" matTooltip="Eliminar" (click)="eliminar(h)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+  <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+</table>
+
+<p *ngIf="!cargando && huespedesFiltrados.length === 0" class="sin-datos">
+  No se encontraron huéspedes registrados.
+</p>

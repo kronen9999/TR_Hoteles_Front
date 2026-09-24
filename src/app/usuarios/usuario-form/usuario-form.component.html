@@ -9,7 +9,10 @@
         El nombre de usuario es requerido
       </mat-error>
       <mat-error *ngIf="form.get('username')?.hasError('minlength') || form.get('username')?.hasError('maxlength')">
-        El usuario debe tener entre 3 y 30 caracteres
+        El usuario debe tener entre 5 y 20 caracteres
+      </mat-error>
+      <mat-error *ngIf="form.get('username')?.hasError('pattern')">
+        El usuario solo admite letras, números, punto, guion y guion bajo
       </mat-error>
     </mat-form-field>
 
@@ -20,7 +23,10 @@
         La contraseña es requerida
       </mat-error>
       <mat-error *ngIf="form.get('password')?.hasError('minlength')">
-        La contraseña debe tener mínimo 6 caracteres
+        La contraseña debe tener mínimo 8 caracteres
+      </mat-error>
+      <mat-error *ngIf="form.get('password')?.hasError('pattern')">
+        La contraseña debe contener letras y números
       </mat-error>
     </mat-form-field>
 

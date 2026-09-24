@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UsuarioResponse, UsuarioRequest, ROLES_CATALOGO } from '../../core/models/usuario.model';
 import { UsuarioService } from '../usuario.service';
+import { HttpErrorHelper } from '../../core/utils/http-error.helper';
 
 @Component({
   selector: 'app-usuario-form',
@@ -26,8 +27,8 @@ export class UsuarioFormComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: UsuarioResponse | null
   ) {
     this.form = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      username: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(20), Validators.pattern(/^[a-zA-Z0-9._-]+$/)]],
+      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/)]],
       roles: [[], [Validators.required]]
     });
   }
@@ -67,7 +68,7 @@ export class UsuarioFormComponent implements OnInit {
       },
       error: (err) => {
         this.guardando = false;
-        this.mostrarMensaje(err?.error?.message ?? 'Error al guardar el usuario');
+        this.mostrarMensaje(HttpErrorHelper.obtenerMensaje(err));
       }
     });
   }

@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { UsuarioResponse, ROLES, ROL_LABELS, Rol } from '../../core/models/usuario.model';
 import { UsuarioFormComponent } from '../usuario-form/usuario-form.component';
 import { UsuarioService } from '../usuario.service';
+import { HttpErrorHelper } from '../../core/utils/http-error.helper';
 
 @Component({
   selector: 'app-usuario-list',
@@ -39,8 +40,8 @@ export class UsuarioListComponent implements OnInit {
         this.usuarios = data;
         this.cargando = false;
       },
-      error: () => {
-        this.mostrarMensaje('Error al cargar la lista de usuarios');
+      error: (err) => {
+        this.mostrarMensaje(HttpErrorHelper.obtenerMensaje(err));
         this.cargando = false;
       }
     });
@@ -65,7 +66,7 @@ export class UsuarioListComponent implements OnInit {
         this.mostrarMensaje('Usuario eliminado correctamente');
         this.buscar();
       },
-      error: () => this.mostrarMensaje('Error al eliminar el usuario')
+      error: (err) => this.mostrarMensaje(HttpErrorHelper.obtenerMensaje(err))
     });
   }
 
