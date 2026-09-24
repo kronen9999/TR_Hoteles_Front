@@ -21,6 +21,10 @@ const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
       {
+        path: 'habitaciones',
+        loadChildren: () => import('./habitaciones/habitaciones.module').then(m => m.HabitacionesModule)
+      },
+      {
         path: 'huespedes',
         loadChildren: () => import('./huespedes/huespedes.module').then(m => m.HuespedesModule)
       },

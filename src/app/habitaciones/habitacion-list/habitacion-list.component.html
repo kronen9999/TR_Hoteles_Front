@@ -1,0 +1,91 @@
+<mat-toolbar color="primary">
+  <span>Habitaciones</span>
+  <span class="spacer"></span>
+  <button mat-raised-button color="accent" (click)="abrirFormulario()" *ngIf="isAdmin">
+    <mat-icon>bed</mat-icon> Nueva habitación
+  </button>
+</mat-toolbar>
+
+<div class="toolbar-busqueda">
+  <mat-form-field appearance="outline" class="campo-filtro">
+    <mat-label>Filtrar por estado</mat-label>
+    <mat-select [(ngModel)]="filtroEstado">
+      <mat-option value="">Todos</mat-option>
+      <mat-option *ngFor="let estado of estadosCatalogo" [value]="estado.id">
+        {{ estado.label }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<div class="loading" *ngIf="cargando">
+  <mat-spinner diameter="40"></mat-spinner>
+</div>
+
+<table mat-table [dataSource]="habitacionesFiltradas" *ngIf="!cargando" class="mat-elevation-z2">
+  <ng-container matColumnDef="numero">
+    <th mat-header-cell *matHeaderCellDef>N°</th>
+    <td mat-cell *matCellDef="let h">{{ h.numeroHabitacion }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="tipo">
+    <th mat-header-cell *matHeaderCellDef>Tipo</th>
+    <td mat-cell *matCellDef="let h">{{ getTipoLabel(h.tipoHabitacion) }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="precio">
+    <th mat-header-cell *matHeaderCellDef>Precio/noche</th>
+    <td mat-cell *matCellDef="let h">{{ h.precio | currency }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="capacidad">
+    <th mat-header-cell *matHeaderCellDef>Capacidad</th>
+    <td mat-cell *matCellDef="let h">{{ h.capacidad }} persona(s)</td>
+  </ng-container>
+
+  <ng-container matColumnDef="estado">
+    <th mat-header-cell *matHeaderCellDef>Estado</th>
+    <td mat-cell *matCellDef="let h">
+      <mat-chip-set>
+        <mat-chip highlighted [color]="getColorEstado(h.estadoHabitacion)">
+          {{ getEstadoLabel(h.estadoHabitacion) }}
+        </mat-chip>
+      </mat-chip-set>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="acciones">
+    <th mat-header-cell *matHeaderCellDef>Acciones</th>
+    <td mat-cell *matCellDef="let h">
+      <ng-container *ngIf="isAdmin">
+        <button mat-icon-button color="primary" matTooltip="Editar" (click)="abrirFormulario(h)">
+          <mat-icon>edit</mat-icon>
+        </button>
+
+        <button mat-icon-button [matMenuTriggerFor]="menuEstado" [disabled]="h.estadoHabitacion === 'OCUPADA'"
+                matTooltip="Cambiar estado" color="accent">
+          <mat-icon>sync_alt</mat-icon>
+        </button>
+        <mat-menu #menuEstado="matMenu">
+          <button mat-menu-item
+                  *ngFor="let estado of estadosCatalogo"
+                  [disabled]="estado.id === h.estadoHabitacion || (h.estadoHabitacion === 'OCUPADA' && estado.id === 'DISPONIBLE')"
+                  (click)="cambiarEstado(h, estado.id)">
+            {{ estado.label }}
+          </button>
+        </mat-menu>
+
+        <button mat-icon-button color="warn" matTooltip="Eliminar" (click)="eliminar(h)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </ng-container>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+  <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+</table>
+
+<p *ngIf="!cargando && habitacionesFiltradas.length === 0" class="sin-datos">
+  No se encontraron habitaciones registradas.
+</p>
