@@ -21,6 +21,10 @@ const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
       {
+        path: 'huespedes',
+        loadChildren: () => import('./huespedes/huespedes.module').then(m => m.HuespedesModule)
+      },
+      {
         path: 'usuarios',
         canActivate: [roleGuard],
         data: { roles: [ROLES[0]]},
