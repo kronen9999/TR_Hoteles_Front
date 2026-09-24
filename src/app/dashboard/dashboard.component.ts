@@ -4,6 +4,7 @@ import { AuthService } from '../core/services/auth.service';
 import { ROLES } from '../core/models/usuario.model';
 import { HuespedService } from '../huespedes/huesped.service';
 import { HabitacionService } from '../habitaciones/habitacion.service';
+import { ReservaService } from '../reservaciones/reserva.service';
 import { HttpErrorHelper } from '../core/utils/http-error.helper';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -18,15 +19,18 @@ export class DashboardComponent implements OnInit {
   totalUsuarios = 0;
   totalHuespedesActivos = 0;
   totalHabitacionesDisponibles = 0;
+  totalReservasActivas = 0;
   cargandoUsuarios = true;
   cargandoHuespedes = true;
   cargandoHabitaciones = true;
+  cargandoReservas = true;
   isAdmin = false;
 
   constructor(
     private usuarioService: UsuarioService,
     private huespedService: HuespedService,
     private habitacionService: HabitacionService,
+    private reservaService: ReservaService,
     private authService: AuthService,
     private snackBar: MatSnackBar
   ) {}
@@ -38,6 +42,7 @@ export class DashboardComponent implements OnInit {
     }
     this.listarHuespedes();
     this.listarHabitaciones();
+    this.listarReservas();
   }
 
   listarUsuarios(): void {
@@ -74,6 +79,22 @@ export class DashboardComponent implements OnInit {
       },
       error: (err) => {
         this.cargandoHabitaciones = false;
+        this.snackBar.open(HttpErrorHelper.obtenerMensaje(err), 'Cerrar', { duration: 3000 });
+      }
+    });
+  }
+
+  listarReservas(): void {
+    this.reservaService.listar().subscribe({
+      next: (data) => {
+        // Reservas "activas": CONFIRMADAS o EN_CURSO (check-in / check-out en flujo)
+        this.totalReservasActivas = data.filter(r =>
+          r.estadoReserva === 'CONFIRMADA' || r.estadoReserva === 'EN_CURSO'
+        ).length;
+        this.cargandoReservas = false;
+      },
+      error: (err) => {
+        this.cargandoReservas = false;
         this.snackBar.open(HttpErrorHelper.obtenerMensaje(err), 'Cerrar', { duration: 3000 });
       }
     });

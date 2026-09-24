@@ -21,6 +21,10 @@ const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
       {
+        path: 'reservaciones',
+        loadChildren: () => import('./reservaciones/reservaciones.module').then(m => m.ReservacionesModule)
+      },
+      {
         path: 'habitaciones',
         loadChildren: () => import('./habitaciones/habitaciones.module').then(m => m.HabitacionesModule)
       },
