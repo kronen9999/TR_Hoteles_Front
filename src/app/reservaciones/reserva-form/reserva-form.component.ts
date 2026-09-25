@@ -81,8 +81,8 @@ export class ReservaFormComponent implements OnInit {
       this.form.patchValue({
         idHuesped: this.data!.idHuesped,
         idHabitacion: this.data!.idHabitacion,
-        fechaEntrada: this.data!.fechaEntrada,
-        fechaSalida: this.data!.fechaSalida
+        fechaEntrada: this.charAtFecha(this.data!.fechaEntrada),
+        fechaSalida: this.charAtFecha(this.data!.fechaSalida)
       });
 
       // Reglas del README: huésped y habitación NUNCA se pueden cambiar en una reserva
@@ -131,8 +131,8 @@ export class ReservaFormComponent implements OnInit {
     const request: ReservaRequest = {
       idHuesped: valor.idHuesped,
       idHabitacion: valor.idHabitacion,
-      fechaEntrada: this.esEnCurso ? this.data!.fechaEntrada : valor.fechaEntrada,
-      fechaSalida: valor.fechaSalida
+      fechaEntrada: this.esEnCurso ? this.data!.fechaEntrada : this.fechaAString(valor.fechaEntrada),
+      fechaSalida: this.fechaAString(valor.fechaSalida)
     };
 
     const obs = this.esEdicion
@@ -155,6 +155,23 @@ export class ReservaFormComponent implements OnInit {
 
   cancelar(): void {
     this.dialogRef.close(false);
+  }
+
+  private charAtFecha(fecha: string): Date | string {
+    if (!fecha || typeof fecha !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
+      return fecha;
+    }
+    const [y, m, d] = fecha.split('-').map(Number);
+    return new Date(y, m - 1, d);
+  }
+
+  private fechaAString(fecha: Date | string | null): string {
+    if (!fecha) return '';
+    if (typeof fecha === 'string') return fecha;
+    const y = fecha.getFullYear();
+    const m = String(fecha.getMonth() + 1).padStart(2, '0');
+    const d = String(fecha.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
   }
 
   private mostrarMensaje(mensaje: string): void {

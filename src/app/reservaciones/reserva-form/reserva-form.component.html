@@ -41,7 +41,9 @@
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Fecha de entrada</mat-label>
-        <input matInput type="date" formControlName="fechaEntrada" [readonly]="esEnCurso">
+        <input matInput [matDatepicker]="pickerEntrada" formControlName="fechaEntrada" readonly>
+        <mat-datepicker-toggle matSuffix [for]="pickerEntrada" [disabled]="esEnCurso"></mat-datepicker-toggle>
+        <mat-datepicker #pickerEntrada [disabled]="esEnCurso"></mat-datepicker>
         <mat-error *ngIf="form.get('fechaEntrada')?.hasError('required')">
           La fecha de entrada es requerida
         </mat-error>
@@ -52,7 +54,9 @@
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Fecha de salida</mat-label>
-        <input matInput type="date" formControlName="fechaSalida">
+        <input matInput [matDatepicker]="pickerSalida" formControlName="fechaSalida" readonly>
+        <mat-datepicker-toggle matSuffix [for]="pickerSalida"></mat-datepicker-toggle>
+        <mat-datepicker #pickerSalida></mat-datepicker>
         <mat-error *ngIf="form.get('fechaSalida')?.hasError('required')">
           La fecha de salida es requerida
         </mat-error>

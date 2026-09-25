@@ -17,6 +17,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 const MATERIAL_MODULES = [
   MatTableModule,
@@ -35,11 +37,13 @@ const MATERIAL_MODULES = [
   MatCardModule,
   MatChipsModule,
   MatDividerModule,
-  MatMenuModule
+  MatMenuModule,
+  MatDatepickerModule
 ];
 
 @NgModule({
   imports: MATERIAL_MODULES,
-  exports: MATERIAL_MODULES
+  exports: MATERIAL_MODULES,
+  providers: [provideNativeDateAdapter()]
 })
 export class MaterialModule { }
