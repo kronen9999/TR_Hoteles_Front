@@ -14,7 +14,7 @@
       <mat-option value="CONFIRMADA">Confirmadas</mat-option>
       <mat-option value="EN_CURSO">En curso</mat-option>
       <mat-option value="FINALIZADA">Finalizadas</mat-option>
-      <mat-option value="CANCELADA">Canceladas</mat-option>
+      <mat-option value="CANCELADA" *ngIf="isAdmin">Canceladas</mat-option>
     </mat-select>
   </mat-form-field>
 </div>

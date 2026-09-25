@@ -8,6 +8,8 @@ import { HuespedService } from '../../huespedes/huesped.service';
 import { HabitacionService } from '../../habitaciones/habitacion.service';
 import { ReservaResponse, EstadoReserva } from '../../core/models/reserva.model';
 import { HttpErrorHelper } from '../../core/utils/http-error.helper';
+import { AuthService } from '../../core/services/auth.service';
+import { ROLES } from '../../core/models/usuario.model';
 
 @Component({
   selector: 'app-reserva-list',
@@ -24,24 +26,29 @@ export class ReservaListComponent implements OnInit {
 
   nombresHuespedes: Record<number, string> = {};
   numerosHabitaciones: Record<number, number> = {};
+  isAdmin = false;
 
   constructor(
     private reservaService: ReservaService,
     private huespedService: HuespedService,
     private habitacionService: HabitacionService,
+    private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
+    this.isAdmin = this.authService.hasRole(ROLES[0]);
     this.buscar();
   }
 
   get reservasFiltradas(): ReservaResponse[] {
+    // Demo (solo front): el usuario normal no ve las reservas CANCELADAS
+    let listado = this.isAdmin ? this.reservas : this.reservas.filter(r => r.estadoReserva !== 'CANCELADA');
     if (!this.filtroEstado) {
-      return this.reservas;
+      return listado;
     }
-    return this.reservas.filter(r => r.estadoReserva === this.filtroEstado);
+    return listado.filter(r => r.estadoReserva === this.filtroEstado);
   }
 
   nombreHuesped(idHuesped: number): string {
@@ -71,7 +78,8 @@ export class ReservaListComponent implements OnInit {
   }
 
   puedeEliminar(r: ReservaResponse): boolean {
-    return r.estadoReserva === 'CONFIRMADA';
+    // Demo (solo front): solo el admin puede eliminar
+    return this.isAdmin && r.estadoReserva === 'CONFIRMADA';
   }
 
   buscar(): void {
