@@ -31,9 +31,9 @@ export class HuespedFormComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: HuespedResponse | null
   ) {
     this.form = this.fb.group({
-      nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
-      apellidoPaterno: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
-      apellidoMaterno: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
+      nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+      apellidoPaterno: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+      apellidoMaterno: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
       telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       documento: ['', [Validators.required, Validators.pattern(/^(CREDENCIAL|PASAPORTE|CURP)$/)]],
@@ -46,10 +46,12 @@ export class HuespedFormComponent implements OnInit {
     if (this.data) {
       this.esEdicion = true;
 
-      const partes = this.data.nombre.split(' ');
-      const nombre = partes[0] ?? '';
-      const apellidoMaterno = partes.length > 2 ? partes.pop()! : '';
-      const apellidoPaterno = partes.slice(1).join(' ');
+      // Los campos separados conservan nombres y apellidos compuestos sin inferencias.
+      // Compatibilidad con respuestas anteriores que solo contienen el nombre completo.
+      const partes = this.data.nombre.trim().split(/\s+/);
+      const apellidoMaterno = this.data.apellidoMaterno ?? (partes.length > 2 ? partes.pop()! : '');
+      const apellidoPaterno = this.data.apellidoPaterno ?? (partes.length > 1 ? partes.pop()! : '');
+      const nombre = this.data.nombrePila ?? partes.join(' ');
 
       this.form.patchValue({
         nombre,
@@ -57,7 +59,7 @@ export class HuespedFormComponent implements OnInit {
         apellidoMaterno,
         email: this.data.email,
         telefono: this.data.telefono,
-        documento: this.data.documento,
+        documento: this.data.documento.toUpperCase().replace(/ /g, '_'),
         numDocumento: this.data.numDocumento,
         nacionalidad: this.data.nacionalidad
       });

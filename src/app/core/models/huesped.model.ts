@@ -27,6 +27,9 @@ export interface HuespedRequest {
 }
 
 export interface HuespedResponse {
+  nombrePila?: string;
+  apellidoPaterno?: string;
+  apellidoMaterno?: string;
   idHuesped: number;
   nombre: string;
   email: string;
