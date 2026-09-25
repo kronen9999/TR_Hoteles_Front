@@ -41,7 +41,8 @@
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Fecha de entrada</mat-label>
-        <input matInput [matDatepicker]="pickerEntrada" formControlName="fechaEntrada" readonly>
+        <input matInput [matDatepicker]="pickerEntrada" formControlName="fechaEntrada" readonly
+               [min]="fechaMinima" [matDatepickerFilter]="fechaValida">
         <mat-datepicker-toggle matSuffix [for]="pickerEntrada" [disabled]="esEnCurso"></mat-datepicker-toggle>
         <mat-datepicker #pickerEntrada [disabled]="esEnCurso"></mat-datepicker>
         <mat-error *ngIf="form.get('fechaEntrada')?.hasError('required')">
@@ -54,7 +55,8 @@
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Fecha de salida</mat-label>
-        <input matInput [matDatepicker]="pickerSalida" formControlName="fechaSalida" readonly>
+        <input matInput [matDatepicker]="pickerSalida" formControlName="fechaSalida" readonly
+               [min]="fechaMinima" [matDatepickerFilter]="fechaValida">
         <mat-datepicker-toggle matSuffix [for]="pickerSalida"></mat-datepicker-toggle>
         <mat-datepicker #pickerSalida></mat-datepicker>
         <mat-error *ngIf="form.get('fechaSalida')?.hasError('required')">
@@ -64,6 +66,9 @@
 
       <p class="nota error" *ngIf="form.hasError('fechasInconsistentes')">
         La fecha de entrada debe ser anterior a la fecha de salida.
+      </p>
+      <p class="nota error" *ngIf="form.hasError('fechasPasadas')">
+        La fecha de entrada no puede ser anterior al día de hoy.
       </p>
 
       <p class="nota" *ngIf="esEnCurso">

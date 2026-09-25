@@ -14,6 +14,14 @@ export function fechasConsistentesValidator(group: AbstractControl): ValidationE
   const entrada = group.get('fechaEntrada')?.value;
   const salida = group.get('fechaSalida')?.value;
   if (!entrada || !salida) return null;
+
+  // Regla: la fecha de entrada no puede ser anterior a hoy
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+  if (entrada instanceof Date && entrada < hoy) {
+    return { fechasPasadas: true };
+  }
+
   return entrada < salida ? null : { fechasInconsistentes: true };
 }
 
@@ -30,6 +38,10 @@ export class ReservaFormComponent implements OnInit {
   huespedes: { idHuesped: number; nombre: string }[] = [];
   habitacionesDisponibles: { idHabitacion: number; numeroHabitacion: number }[] = [];
   form: FormGroup;
+
+  readonly fechaMinima = new Date(new Date().setHours(0, 0, 0, 0));
+  readonly fechaValida = (d: Date | null) =>
+    !!d && d.getTime() >= new Date(new Date().setHours(0, 0, 0, 0)).getTime();
 
   constructor(
     private fb: FormBuilder,
