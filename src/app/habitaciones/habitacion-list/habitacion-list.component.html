@@ -69,7 +69,7 @@
         <mat-menu #menuEstado="matMenu">
           <button mat-menu-item
                   *ngFor="let estado of estadosCatalogo"
-                  [disabled]="estado.id === h.estadoHabitacion"
+                  [disabled]="estado.id === h.estadoHabitacion || estado.id === 'OCUPADA'"
                   (click)="cambiarEstado(h, estado.id)">
             {{ estado.label }}
           </button>
