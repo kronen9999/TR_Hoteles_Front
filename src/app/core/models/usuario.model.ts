@@ -22,6 +22,8 @@ export interface UsuarioRequest {
 }
 
 export interface UsuarioResponse {
+  idUsuario: number;
   username: string;
   roles: Rol[];
+  estadoRegistro: 'ACTIVO' | 'ELIMINADO';
 }

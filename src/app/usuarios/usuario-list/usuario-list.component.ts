@@ -48,6 +48,17 @@ export class UsuarioListComponent implements OnInit {
   }
 
   abrirFormulario(usuario?: UsuarioResponse): void {
+    if (usuario) {
+      this.usuarioService.obtenerPorId(usuario.idUsuario).subscribe({
+        next: actual => this.mostrarFormulario(actual),
+        error: err => this.mostrarMensaje(HttpErrorHelper.obtenerMensaje(err))
+      });
+    } else {
+      this.mostrarFormulario(null);
+    }
+  }
+
+  private mostrarFormulario(usuario: UsuarioResponse | null): void {
     const ref = this.dialog.open(UsuarioFormComponent, {
       width: '450px',
       data: usuario ?? null
@@ -61,7 +72,7 @@ export class UsuarioListComponent implements OnInit {
   eliminar(usuario: UsuarioResponse): void {
     if (!confirm(`¿Eliminar al usuario "${usuario.username}"?`)) return;
 
-    this.usuarioService.eliminar(usuario.username).subscribe({
+    this.usuarioService.eliminar(usuario.idUsuario).subscribe({
       next: () => {
         this.mostrarMensaje('Usuario eliminado correctamente');
         this.buscar();

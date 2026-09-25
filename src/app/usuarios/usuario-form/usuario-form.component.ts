@@ -28,7 +28,7 @@ export class UsuarioFormComponent implements OnInit {
   ) {
     this.form = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(20), Validators.pattern(/^[a-zA-Z0-9._-]+$/)]],
-      password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/)]],
+      password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(20), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/)]],
       roles: [[], [Validators.required]]
     });
   }
@@ -41,8 +41,7 @@ export class UsuarioFormComponent implements OnInit {
         roles: this.data.roles
       });
 
-      this.form.get('username')?.disable();
-      this.form.get('password')?.clearValidators();
+      this.form.get('password')?.removeValidators(Validators.required);
       this.form.get('password')?.updateValueAndValidity();
     }
   }
@@ -55,9 +54,12 @@ export class UsuarioFormComponent implements OnInit {
 
     this.guardando = true;
     const request: UsuarioRequest = this.form.getRawValue();
+    if (this.esEdicion && !request.password) {
+      delete request.password;
+    }
 
     const obs = this.esEdicion
-      ? this.usuarioService.actualizar(this.data!.username, request)
+      ? this.usuarioService.actualizar(this.data!.idUsuario, request)
       : this.usuarioService.registrar(request);
 
     obs.subscribe({

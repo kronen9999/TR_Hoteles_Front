@@ -16,14 +16,15 @@
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width" *ngIf="!esEdicion">
-      <mat-label>Contraseña</mat-label>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ esEdicion ? 'Nueva contraseña (opcional)' : 'Contraseña' }}</mat-label>
       <input matInput type="password" formControlName="password">
+      <mat-hint *ngIf="esEdicion">Déjala vacía para conservar la contraseña actual</mat-hint>
       <mat-error *ngIf="form.get('password')?.hasError('required')">
         La contraseña es requerida
       </mat-error>
-      <mat-error *ngIf="form.get('password')?.hasError('minlength')">
-        La contraseña debe tener mínimo 8 caracteres
+      <mat-error *ngIf="form.get('password')?.hasError('minlength') || form.get('password')?.hasError('maxlength')">
+        La contraseña debe tener entre 8 y 20 caracteres
       </mat-error>
       <mat-error *ngIf="form.get('password')?.hasError('pattern')">
         La contraseña debe contener letras y números

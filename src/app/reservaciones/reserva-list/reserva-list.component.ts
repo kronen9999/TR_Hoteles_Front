@@ -71,7 +71,7 @@ export class ReservaListComponent implements OnInit {
   }
 
   puedeEliminar(r: ReservaResponse): boolean {
-    return r.estadoReserva !== 'EN_CURSO';
+    return r.estadoReserva === 'CONFIRMADA';
   }
 
   buscar(): void {
@@ -146,6 +146,10 @@ export class ReservaListComponent implements OnInit {
   }
 
   eliminar(reserva: ReservaResponse): void {
+    if (!this.puedeEliminar(reserva)) {
+      this.mostrarMensaje('Solo se pueden eliminar reservas confirmadas. Las reservas históricas son de solo consulta.');
+      return;
+    }
     if (!confirm(`¿Eliminar la reserva #${reserva.idReserva}?`)) return;
 
     this.reservaService.eliminar(reserva.idReserva).subscribe({
@@ -153,7 +157,7 @@ export class ReservaListComponent implements OnInit {
         this.mostrarMensaje('Reserva eliminada correctamente');
         this.buscar();
       },
-      // 409: la reserva EN_CURSO no se puede eliminar
+      // 409: el estado actual de la reserva no permite eliminarla
       error: (err) => this.mostrarMensaje(HttpErrorHelper.obtenerMensaje(err))
     });
   }
