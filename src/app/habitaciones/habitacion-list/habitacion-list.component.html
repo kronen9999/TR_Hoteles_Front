@@ -58,7 +58,7 @@
     <th mat-header-cell *matHeaderCellDef>Acciones</th>
     <td mat-cell *matCellDef="let h">
       <ng-container *ngIf="isAdmin">
-        <button mat-icon-button color="primary" matTooltip="Editar" (click)="abrirFormulario(h)">
+        <button mat-icon-button color="primary" matTooltip="Editar" [disabled]="h.estadoHabitacion === 'OCUPADA'" (click)="abrirFormulario(h)">
           <mat-icon>edit</mat-icon>
         </button>
 
@@ -69,13 +69,13 @@
         <mat-menu #menuEstado="matMenu">
           <button mat-menu-item
                   *ngFor="let estado of estadosCatalogo"
-                  [disabled]="estado.id === h.estadoHabitacion || (h.estadoHabitacion === 'OCUPADA' && estado.id === 'DISPONIBLE')"
+                  [disabled]="estado.id === h.estadoHabitacion"
                   (click)="cambiarEstado(h, estado.id)">
             {{ estado.label }}
           </button>
         </mat-menu>
 
-        <button mat-icon-button color="warn" matTooltip="Eliminar" (click)="eliminar(h)">
+        <button mat-icon-button color="warn" matTooltip="Eliminar" [disabled]="h.estadoHabitacion === 'OCUPADA'" (click)="eliminar(h)">
           <mat-icon>delete</mat-icon>
         </button>
       </ng-container>
