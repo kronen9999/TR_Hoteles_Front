@@ -36,7 +36,7 @@ export class HuespedFormComponent implements OnInit {
       apellidoMaterno: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
       email: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
       telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-      documento: ['', [Validators.required, Validators.pattern(/^(CREDENCIAL|PASAPORTE|CARTILLA_MILITAR|CURP)$/)]],
+      documento: ['', [Validators.required, Validators.pattern(/^(CREDENCIAL|PASAPORTE|CURP)$/)]],
       numDocumento: ['', [Validators.required, Validators.pattern(/^\d{5}$/)]],
       nacionalidad: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(30)]]
     });

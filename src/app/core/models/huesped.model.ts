@@ -1,7 +1,6 @@
 export const DOCUMENTOS = [
   'CREDENCIAL',
   'PASAPORTE',
-  'CARTILLA_MILITAR',
   'CURP'
 ] as const;
 
@@ -10,7 +9,6 @@ export type Documento = typeof DOCUMENTOS[number];
 export const DOCUMENTO_LABELS: Record<Documento, string> = {
   CREDENCIAL: 'Credencial',
   PASAPORTE: 'Pasaporte',
-  CARTILLA_MILITAR: 'Cartilla Militar',
   CURP: 'CURP'
 };
 

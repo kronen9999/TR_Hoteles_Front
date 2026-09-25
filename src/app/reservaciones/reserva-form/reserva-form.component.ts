@@ -10,7 +10,7 @@ import { ReservaResponse, ReservaRequest } from '../../core/models/reserva.model
 import { HttpErrorHelper } from '../../core/utils/http-error.helper';
 
 // Regla del README: siempre debe cumplirse fechaEntrada < fechaSalida
-function fechasConsistentesValidator(group: AbstractControl): ValidationErrors | null {
+export function fechasConsistentesValidator(group: AbstractControl): ValidationErrors | null {
   const entrada = group.get('fechaEntrada')?.value;
   const salida = group.get('fechaSalida')?.value;
   if (!entrada || !salida) return null;
