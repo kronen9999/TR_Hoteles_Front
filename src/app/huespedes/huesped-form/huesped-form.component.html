@@ -61,7 +61,7 @@
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Teléfono</mat-label>
-      <input matInput formControlName="telefono" maxlength="10" inputmode="numeric">
+      <input matInput formControlName="telefono" maxlength="10" inputmode="numeric" (input)="soloNumeros($event)">
       <mat-icon matSuffix>phone</mat-icon>
       <mat-error *ngIf="form.get('telefono')?.hasError('required')">
         El teléfono es requerido

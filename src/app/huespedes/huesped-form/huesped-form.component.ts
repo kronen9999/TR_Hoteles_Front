@@ -96,6 +96,15 @@ export class HuespedFormComponent implements OnInit {
     this.dialogRef.close(false);
   }
 
+  soloNumeros(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const limpio = input.value.replace(/\D/g, '');
+    if (input.value !== limpio) {
+      input.value = limpio;
+      this.form.get('telefono')?.setValue(limpio, { emitEvent: false });
+    }
+  }
+
   private mostrarMensaje(mensaje: string): void {
     this.snackBar.open(mensaje, 'Cerrar', { duration: 3000 });
   }
